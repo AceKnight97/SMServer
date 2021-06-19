@@ -44,6 +44,7 @@ const userSchema = new mongoose.Schema({
   signUpDate: {
     type: Date,
   },
+  
   // END NEW
 
   isVerified: {

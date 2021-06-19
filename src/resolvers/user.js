@@ -6,6 +6,7 @@ import generator from "generate-password";
 
 import { isAdmin, isAuthenticated } from "./authorization";
 import Email from "../utils/email";
+import _ from "lodash";
 
 const createToken = async (user, secret, expiresIn) => {
   const { id, email, username, role } = user;
@@ -13,6 +14,27 @@ const createToken = async (user, secret, expiresIn) => {
     expiresIn,
   });
   return token;
+};
+
+const getLogInfo = async (models, id) => {
+  const data = await models.UserSpending.find({
+    user: id,
+  }).sort({ iso: 'asc' });
+  let totalSpending = 0;
+  let totalIncome = 0;
+
+  if (data?.length!==0) {
+    _.forEach(data, x => {
+      const temp = _.sumBy(x.logs || [], y => y.money);
+      totalSpending += temp;
+      totalIncome += x.income || 0;
+    })
+  }
+  return {
+    firstDate: data[0].date||'',
+    totalSpending,
+    totalIncome,
+  }
 };
 
 export default {
@@ -23,14 +45,22 @@ export default {
     },
     user: async (parent, { id }, { models }) => {
       const user = await models.User.findById(id);
-      return user;
+      const {
+        firstDate, totalIncome, totalSpending
+      } = await getLogInfo(models, id);
+      _.assign(user, { firstDate, totalIncome, totalSpending });
+      return user || {};
     },
     me: async (parent, args, { models, me }) => {
       if (!me) {
-        return null;
+        return {};
       }
       const user = await models.User.findById(me.id);
-      return user;
+      const {
+        firstDate, totalIncome, totalSpending
+      } = await getLogInfo(models, me.id);
+      _.assign(user, { firstDate, totalIncome, totalSpending });
+      return user || {};
     },
   },
 

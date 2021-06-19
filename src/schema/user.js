@@ -2,7 +2,7 @@ import { gql } from "apollo-server-express";
 
 export default gql`
   extend type Query {
-    users: [User]!
+    users: [UsersResponse]!
     user(id: ID!): User
     me: User
   }
@@ -39,6 +39,21 @@ export default gql`
     user: User
   }
 
+  type UsersResponse {
+    id: ID!
+    username: String!
+    email: String!
+    role: String
+    signUpDate: Date
+    # NEW FIELDS
+    status: String
+    gender: String
+    address: String
+    phone: String
+    dob: Date
+    isVerified: Boolean
+  }
+
   type User {
     id: ID!
     username: String!
@@ -52,6 +67,11 @@ export default gql`
     phone: String
     dob: Date
     isVerified: Boolean
+
+    # PROFILE INFO
+    firstDate: String
+    totalSpending: Float
+    totalIncome: Float
   }
 
   type MutationResponse {
