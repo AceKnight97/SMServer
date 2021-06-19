@@ -52,7 +52,7 @@ export default {
           $gte: timeIso(from),
           $lte: timeIso(to),
         },
-      });
+      }).sort({iso: 'asc'});
 
       return _.map(data, (x) => ({
         id: x._id,
