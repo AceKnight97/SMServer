@@ -15,9 +15,9 @@ export default gql`
     updateUser(profileInput: ProfileInput!): MutationResponse!
     deleteUser(id: ID!): MutationResponse!
     verifiedEmail(verificationCode: String!): MutationResponse!
-    changePassword(password: String!, newPassword: String): MutationResponse!
-    resetPassword(password: String!): MutationResponse!
-    forgotPass(email: String!): Boolean!
+    changePassword(password: String!, newPassword: String!): TokenMutationResponse!
+    resetPassword(verificationCode: String!, password: String!): TokenMutationResponse!
+    forgotPassword(email: String!): MutationResponse!
   }
 
   input ProfileInput {
@@ -78,5 +78,11 @@ export default gql`
   type MutationResponse {
     isSuccess: Boolean!
     message: String
+  }
+
+  type TokenMutationResponse {
+    isSuccess: Boolean!
+    message: String
+    token: String
   }
 `;

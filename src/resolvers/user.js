@@ -19,23 +19,23 @@ const createToken = async (user, secret, expiresIn) => {
 const getLogInfo = async (models, id) => {
   const data = await models.UserSpending.find({
     user: id,
-  }).sort({ iso: 'asc' });
+  }).sort({ iso: "asc" });
   let totalSpending = 0;
   let totalIncome = 0;
 
-  if (data?.length!==0) {
-    _.forEach(data, x => {
-      const temp = _.sumBy(x.logs || [], y => y.money);
+  if (data?.length !== 0) {
+    _.forEach(data, (x) => {
+      const temp = _.sumBy(x.logs || [], (y) => y.money);
       totalSpending += temp;
       totalIncome += x.income || 0;
-    })
+    });
   }
   return {
-    firstDate: data[0].date||'',
+    firstDate: data?.[0]?.date || "",
     totalSpending,
     totalIncome,
     moneyLeft: totalIncome - totalSpending,
-  }
+  };
 };
 
 export default {
@@ -46,9 +46,8 @@ export default {
     },
     user: async (parent, { id }, { models }) => {
       const user = await models.User.findById(id);
-      const {
-        firstDate, totalIncome, totalSpending, moneyLeft
-      } = await getLogInfo(models, id);
+      const { firstDate, totalIncome, totalSpending, moneyLeft } =
+        await getLogInfo(models, id);
       _.assign(user, { firstDate, totalIncome, totalSpending, moneyLeft });
       return user || {};
     },
@@ -57,9 +56,8 @@ export default {
         return {};
       }
       const user = await models.User.findById(me.id);
-      const {
-        firstDate, totalIncome, totalSpending, moneyLeft
-      } = await getLogInfo(models, me.id);
+      const { firstDate, totalIncome, totalSpending, moneyLeft } =
+        await getLogInfo(models, me.id);
       _.assign(user, { firstDate, totalIncome, totalSpending, moneyLeft });
       return user || {};
     },
@@ -91,11 +89,11 @@ export default {
       }
       const isValid = await user.validatePassword(password);
       if (!isValid) {
-        const forgotPass = await models.User.findOne({
+        const forgotPassword = await models.User.findOne({
           forgotToken: password,
           resetPasswordExpires: { $gt: Date.now() },
         });
-        if (forgotPass) {
+        if (forgotPassword) {
           return {
             token: createToken(user, secret, "1h"),
             srp: true,
@@ -106,7 +104,11 @@ export default {
         throw new AuthenticationError("Invalid password.");
       }
 
-      return { token: createToken(user, secret, "1h"), isSuccess: true, user };
+      return {
+        token: createToken(user, secret, "1h"),
+        isSuccess: true,
+        user
+      };
     },
 
     updateUser: combineResolvers(
@@ -119,6 +121,35 @@ export default {
           { new: true }
         );
         return { isSuccess: !!user };
+      }
+    ),
+
+    changePassword: combineResolvers(
+      isAuthenticated,
+      async (parent, { password, newPassword }, { models, me }) => {
+        try {
+          const user = await models.User.findById(me.id);
+          const isValid = await user.validatePassword(password);
+          if (!isValid) {
+            throw new AuthenticationError("Invalid password.");
+          }
+          const userNewPassword = await models.User.findByIdAndUpdate(
+            me.id,
+            { password: newPassword },
+            { new: true }
+          );
+          userNewPassword.save();
+
+          return {
+            token: createToken(userNewPassword, process.env.SECRET, "1h"),
+            isSuccess: true,
+          };
+        } catch (error) {
+          return {
+            isSuccess: false,
+            message: `${error}`,
+          };
+        }
       }
     ),
 
@@ -158,7 +189,7 @@ export default {
       }
     ),
 
-    forgotPass: async (parent, { email }, { models }) => {
+    forgotPassword: async (parent, { email }, { models }) => {
       const user = await models.User.findOneAndUpdate(
         { email },
         {
@@ -171,51 +202,40 @@ export default {
         { new: true }
       );
       Email.sendForgotPassword(email, user.forgotToken);
-      return Boolean(user);
+      return {
+        isSuccess: Boolean(user),
+      };
     },
 
-    resetPassword: combineResolvers(
-      isAuthenticated,
-      async (parent, { password }, { models, me }) => {
-        const user = await models.User.findById(me.id);
-        if (!user.forgotToken) {
-          throw new AuthenticationError("Invalid password.");
+    resetPassword: async (parent, { verificationCode, password }, { models }) => {
+        try {
+          const user = await models.User.findOne({
+            forgotToken: verificationCode,
+          });
+          if (!user.forgotToken) {
+            throw new AuthenticationError("Invalid verification code.");
+          }
+          const userNewPassword = await models.User.findByIdAndUpdate(
+            user._id,
+            {
+              password,
+              forgotToken: "",
+              resetPasswordExpires: undefined,
+            },
+            { new: true }
+          );
+          userNewPassword.save();
+          return {
+            token: createToken(userNewPassword, process.env.SECRET, "10m"),
+            isSuccess: true
+          };
+        } catch (error) {
+          return {
+            isSuccess: false,
+            message: `${error}`,
+          }
         }
-        const userNewPassword = await models.User.findByIdAndUpdate(
-          me.id,
-          {
-            password,
-            forgotToken: "",
-            resetPasswordExpires: undefined,
-          },
-          { new: true }
-        );
-        userNewPassword.save();
-        return {
-          token: createToken(userNewPassword, process.env.SECRET, "10m"),
-        };
-      }
-    ),
-
-    changePassword: combineResolvers(
-      isAuthenticated,
-      async (parent, { password, newPassword }, { models, me }) => {
-        const user = await models.User.findById(me.id);
-        const isValid = await user.validatePassword(password);
-        if (!isValid) {
-          throw new AuthenticationError("Invalid password.");
-        }
-        const userNewPassword = await models.User.findByIdAndUpdate(
-          me.id,
-          { password: newPassword },
-          { new: true }
-        );
-        userNewPassword.save();
-        return {
-          token: createToken(userNewPassword, process.env.SECRET, "1h"),
-        };
-      }
-    ),
+    },
   },
 
   User: {
