@@ -34,6 +34,7 @@ const getLogInfo = async (models, id) => {
     firstDate: data[0].date||'',
     totalSpending,
     totalIncome,
+    moneyLeft: totalIncome - totalSpending,
   }
 };
 
@@ -46,9 +47,9 @@ export default {
     user: async (parent, { id }, { models }) => {
       const user = await models.User.findById(id);
       const {
-        firstDate, totalIncome, totalSpending
+        firstDate, totalIncome, totalSpending, moneyLeft
       } = await getLogInfo(models, id);
-      _.assign(user, { firstDate, totalIncome, totalSpending });
+      _.assign(user, { firstDate, totalIncome, totalSpending, moneyLeft });
       return user || {};
     },
     me: async (parent, args, { models, me }) => {
@@ -57,9 +58,9 @@ export default {
       }
       const user = await models.User.findById(me.id);
       const {
-        firstDate, totalIncome, totalSpending
+        firstDate, totalIncome, totalSpending, moneyLeft
       } = await getLogInfo(models, me.id);
-      _.assign(user, { firstDate, totalIncome, totalSpending });
+      _.assign(user, { firstDate, totalIncome, totalSpending, moneyLeft });
       return user || {};
     },
   },

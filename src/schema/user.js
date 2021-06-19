@@ -72,6 +72,7 @@ export default gql`
     firstDate: String
     totalSpending: Float
     totalIncome: Float
+    moneyLeft: Float
   }
 
   type MutationResponse {
