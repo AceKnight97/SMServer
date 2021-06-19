@@ -193,10 +193,7 @@ export default {
       const user = await models.User.findOneAndUpdate(
         { email },
         {
-          forgotToken: generator.generate({
-            length: 10,
-            numbers: true,
-          }),
+          forgotToken: Math.floor(100000 + Math.random() * 900000),
           resetPasswordExpires: moment().add(1, "h"),
         },
         { new: true }
