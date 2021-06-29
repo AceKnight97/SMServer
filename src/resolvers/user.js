@@ -107,7 +107,7 @@ export default {
       return {
         token: createToken(user, secret, "1h"),
         isSuccess: true,
-        user
+        user,
       };
     },
 
@@ -204,34 +204,38 @@ export default {
       };
     },
 
-    resetPassword: async (parent, { verificationCode, password }, { models }) => {
-        try {
-          const user = await models.User.findOne({
-            forgotToken: verificationCode,
-          });
-          if (!user.forgotToken) {
-            throw new AuthenticationError("Invalid verification code.");
-          }
-          const userNewPassword = await models.User.findByIdAndUpdate(
-            user._id,
-            {
-              password,
-              forgotToken: "",
-              resetPasswordExpires: undefined,
-            },
-            { new: true }
-          );
-          userNewPassword.save();
-          return {
-            token: createToken(userNewPassword, process.env.SECRET, "10m"),
-            isSuccess: true
-          };
-        } catch (error) {
-          return {
-            isSuccess: false,
-            message: `${error}`,
-          }
+    resetPassword: async (
+      parent,
+      { verificationCode, password },
+      { models }
+    ) => {
+      try {
+        const user = await models.User.findOne({
+          forgotToken: verificationCode,
+        });
+        if (!user.forgotToken) {
+          throw new AuthenticationError("Invalid verification code.");
         }
+        const userNewPassword = await models.User.findByIdAndUpdate(
+          user._id,
+          {
+            password,
+            forgotToken: "",
+            resetPasswordExpires: undefined,
+          },
+          { new: true }
+        );
+        userNewPassword.save();
+        return {
+          token: createToken(userNewPassword, process.env.SECRET, "10m"),
+          isSuccess: true,
+        };
+      } catch (error) {
+        return {
+          isSuccess: false,
+          message: `${error}`,
+        };
+      }
     },
   },
 
