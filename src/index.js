@@ -15,6 +15,9 @@ import models, {
   connectDb
 } from './models';
 import loaders from './loaders';
+import CONFIG from './config';
+
+const secret = process.env.SECRET;
 
 const app = express();
 
@@ -25,7 +28,7 @@ const getMe = async (req) => {
 
   if (token) {
     try {
-      const decoded = await jwt.verify(token, process.env.SECRET);
+      const decoded = await jwt.verify(token, secret);
       return decoded;
     } catch (e) {
       throw new AuthenticationError(
@@ -72,7 +75,7 @@ const server = new ApolloServer({
       return {
         models,
         me,
-        secret: process.env.SECRET,
+        secret,
         loaders: {
           user: new DataLoader((keys) => loaders.user.batchUsers(keys, models)),
           category: new DataLoader((keys) => loaders.category.batchCategories(keys, models)),
@@ -88,7 +91,8 @@ server.applyMiddleware({
   path: '/graphql'
 });
 
-const httpServer = http.createServer(app);
+// const httpServer = http.createServer(app);
+const httpServer = http.Server(app);
 server.installSubscriptionHandlers(httpServer);
 
 // const isTest = !!process.env.TEST_DATABASE_URL;
@@ -108,5 +112,6 @@ connectDb().then(async () => {
     port
   }, () => {
     console.log(`Apollo Server on http://localhost:${port}/graphql`);
+    console.log(`Config Link: ${CONFIG.LINK}`);
   });
 });

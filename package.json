@@ -15,12 +15,12 @@
     "graphql",
     "mongodb"
   ],
-  "author": "quang dao <dhdquang@gmail.com>",
+  "author": "quang dao <ttriet1997@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/dhdquang/save-money-electron/issues"
   },
-  "homepage": "https://github.com/dhdquang/save-money-electron#readme",
+  "homepage": "https://savenote.herokuapp.com",
   "dependencies": {
     "@sendgrid/mail": "^7.4.4",
     "apollo-server": "^2.24.0",
@@ -38,6 +38,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "mongoose": "^5.12.7",
+    "nodemon": "^2.0.12",
     "uuid": "^8.3.2",
     "validator": "^13.6.0"
   },
