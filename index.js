@@ -9,13 +9,13 @@ import {
   AuthenticationError,
 } from 'apollo-server-express';
 
-import schema from './schema';
-import resolvers from './resolvers';
+import schema from './src/schema';
+import resolvers from './src/resolvers';
 import models, {
   connectDb
-} from './models';
-import loaders from './loaders';
-import CONFIG from './config';
+} from './src/models';
+import loaders from './src/loaders';
+import CONFIG from './src/config';
 
 const secret = process.env.SECRET;
 
