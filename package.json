@@ -4,7 +4,9 @@
   "description": "Api to log money spending",
   "main": "index.js",
   "scripts": {
-    "start": "node --exec babel-node src/index.js",
+    "start": "nodemon --exec babel-node src/index.js",
+		"build": "npm build",
+		"heroku-postbuild": "npm build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
