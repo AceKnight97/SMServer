@@ -8,12 +8,12 @@ import UserSpending from "./userSpending";
 // import Category from "./category";
 
 const connectDb = () => {
-  if (process.env.TEST_DATABASE_URL) {
-    return mongoose.connect(process.env.TEST_DATABASE_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  }
+  // if (process.env.TEST_DATABASE_URL) {
+  //   return mongoose.connect(process.env.TEST_DATABASE_URL, {
+  //     useNewUrlParser: true,
+  //     useUnifiedTopology: true,
+  //   });
+  // }
 
   if (process.env.DATABASE_URL) {
     return mongoose.connect(process.env.DATABASE_URL, {
@@ -34,6 +34,8 @@ const models = {
   // Category,
 };
 
-export { connectDb };
+export {
+  connectDb
+};
 
 export default models;

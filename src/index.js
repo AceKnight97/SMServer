@@ -11,7 +11,9 @@ import {
 
 import schema from './schema';
 import resolvers from './resolvers';
-import models, { connectDb } from './models';
+import models, {
+  connectDb
+} from './models';
 import loaders from './loaders';
 
 const app = express();
@@ -50,7 +52,10 @@ const server = new ApolloServer({
       message,
     };
   },
-  context: async ({ req, connection }) => {
+  context: async ({
+    req,
+    connection
+  }) => {
     if (connection) {
       return {
         models,
@@ -78,25 +83,30 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: '/graphql' });
+server.applyMiddleware({
+  app,
+  path: '/graphql'
+});
 
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
-const isTest = !!process.env.TEST_DATABASE_URL;
-const isProduction = process.env.NODE_ENV === 'production';
+// const isTest = !!process.env.TEST_DATABASE_URL;
+// const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 8000;
 
 connectDb().then(async () => {
-  if (isTest || isProduction) {
-    // reset database
-    await Promise.all([
-      models.User.deleteMany({}),
-      models.Message.deleteMany({}),
-    ]);
-  }
+  // reset database
+  // if (isProduction) { // isTest
+  //   await Promise.all([
+  //     models.User.deleteMany({}),
+  //     models.Message.deleteMany({}),
+  //   ]);
+  // }
 
-  httpServer.listen({ port }, () => {
+  httpServer.listen({
+    port
+  }, () => {
     console.log(`Apollo Server on http://localhost:${port}/graphql`);
   });
 });
