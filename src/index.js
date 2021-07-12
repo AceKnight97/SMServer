@@ -4,15 +4,22 @@ import http from "http";
 import jwt from "jsonwebtoken";
 import DataLoader from "dataloader";
 import express from "express";
-import { ApolloServer, AuthenticationError } from "apollo-server-express";
+import {
+  ApolloServer,
+  AuthenticationError
+} from "apollo-server-express";
 
 import schema from "./schema";
 import resolvers from "./resolvers";
-import models, { connectDb } from "./models";
+import models, {
+  connectDb
+} from "./models";
 import loaders from "./loaders";
 import CONFIG from "./config";
 
 
+// "start": "node src/index.js",
+// "start:dev": "nodemon src/index.js",
 // "start": "nodemon --exec babel-node src/index.js",
 
 const app = express();
@@ -49,7 +56,10 @@ const server = new ApolloServer({
       message,
     };
   },
-  context: async ({ req, connection }) => {
+  context: async ({
+    req,
+    connection
+  }) => {
     if (connection) {
       return {
         models,
@@ -81,7 +91,10 @@ const server = new ApolloServer({
   },
 });
 
-server.applyMiddleware({ app, path: "/graphql" });
+server.applyMiddleware({
+  app,
+  path: "/graphql"
+});
 
 const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
@@ -99,7 +112,9 @@ connectDb().then(async () => {
     ]);
   }
 
-  httpServer.listen({ port }, () => {
+  httpServer.listen({
+    port
+  }, () => {
     console.log(`Apollo Server on ${CONFIG.LINK}`);
   });
 });
