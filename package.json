@@ -4,9 +4,9 @@
   "description": "Api to log money spending",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node server.js",
-		"build": "npm build",
-		"heroku-postbuild": "npm build",
+    "start": "nodemon --exec babel-node src/index.js",
+    "build": "npm build",
+    "heroku-postbuild": "npm build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +24,11 @@
   },
   "homepage": "https://savenote.herokuapp.com",
   "dependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/register": "^7.14.5",
     "@sendgrid/mail": "^7.4.4",
     "apollo-server": "^2.24.0",
     "apollo-server-express": "^2.24.0",
@@ -44,11 +49,5 @@
     "uuid": "^8.3.2",
     "validator": "^13.6.0"
   },
-  "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.14.0",
-    "@babel/node": "^7.13.13",
-    "@babel/preset-env": "^7.14.1",
-    "@babel/register": "^7.13.16"
-  }
+  "devDependencies": {}
 }
