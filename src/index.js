@@ -12,6 +12,9 @@ import models, { connectDb } from "./models";
 import loaders from "./loaders";
 import CONFIG from "./config";
 
+
+// "start": "nodemon --exec babel-node src/index.js",
+
 const app = express();
 
 app.use(cors());
