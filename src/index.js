@@ -10,6 +10,7 @@ import schema from "./schema";
 import resolvers from "./resolvers";
 import models, { connectDb } from "./models";
 import loaders from "./loaders";
+import CONFIG from "./config";
 
 const app = express();
 
@@ -96,6 +97,6 @@ connectDb().then(async () => {
   }
 
   httpServer.listen({ port }, () => {
-    console.log(`Apollo Server on http://localhost:${port}/graphql`);
+    console.log(`Apollo Server on ${CONFIG.LINK}`);
   });
 });
