@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/dhdquang/save-money-electron/issues"
   },
-  "homepage": "https://github.com/dhdquang/save-money-electron#readme",
+  "homepage": "https://savenote.herokuapp.com/",
   "dependencies": {
     "@sendgrid/mail": "^7.4.4",
     "apollo-server": "^2.24.0",
