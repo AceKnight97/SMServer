@@ -105,6 +105,10 @@ connectDb().then(async () => {
     console.log(`Config Link: ${CONFIG.LINK}`);
   });
 });
+app.get('*', function (req, res) {
+  const index = path.join(__dirname, 'build', 'index.html');
+  res.sendFile(index);
+});
 
 // var express = require("express");
 
