@@ -91,8 +91,8 @@ server.applyMiddleware({
   path: '/graphql'
 });
 
-// const httpServer = http.createServer(app);
-const httpServer = http.Server(app);
+const httpServer = http.createServer(app);
+// const httpServer = http.Server(app);
 server.installSubscriptionHandlers(httpServer);
 
 const port = process.env.PORT || 8000;
