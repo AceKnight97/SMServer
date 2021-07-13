@@ -105,3 +105,16 @@ connectDb().then(async () => {
     console.log(`Config Link: ${CONFIG.LINK}`);
   });
 });
+
+// var express = require("express");
+
+// var app = express();
+
+// app.set('view engine', 'ejs');
+// app.set('views', './views');
+
+// app.listen(process.env.PORT || 8000)
+
+// app.get('/', (req, res) => {
+//   res.render('test');
+// })
