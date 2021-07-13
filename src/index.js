@@ -1,21 +1,21 @@
-import 'dotenv/config';
-import cors from 'cors';
-import http from 'http';
-import jwt from 'jsonwebtoken';
-import DataLoader from 'dataloader';
-import express from 'express';
 import {
   ApolloServer,
-  AuthenticationError,
+  AuthenticationError
 } from 'apollo-server-express';
-
-import schema from './schema';
-import resolvers from './resolvers';
+import cors from 'cors';
+import DataLoader from 'dataloader';
+import 'dotenv/config';
+import express from 'express';
+import http from 'http';
+import jwt from 'jsonwebtoken';
+import CONFIG from './config';
+import loaders from './loaders';
 import models, {
   connectDb
 } from './models';
-import loaders from './loaders';
-import CONFIG from './config';
+import resolvers from './resolvers';
+import schema from './schema';
+
 
 const secret = process.env.SECRET;
 
@@ -95,19 +95,9 @@ server.applyMiddleware({
 const httpServer = http.Server(app);
 server.installSubscriptionHandlers(httpServer);
 
-// const isTest = !!process.env.TEST_DATABASE_URL;
-// const isProduction = process.env.NODE_ENV === 'production';
 const port = process.env.PORT || 8000;
 
 connectDb().then(async () => {
-  // reset database
-  // if (isProduction) { // isTest
-  //   await Promise.all([
-  //     models.User.deleteMany({}),
-  //     models.Message.deleteMany({}),
-  //   ]);
-  // }
-
   httpServer.listen({
     port
   }, () => {
