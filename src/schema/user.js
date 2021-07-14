@@ -18,6 +18,8 @@ export default gql`
     changePassword(password: String!, newPassword: String!): TokenMutationResponse!
     resetPassword(verificationCode: String!, password: String!): TokenMutationResponse!
     forgotPassword(email: String!): MutationResponse!
+
+    resendVerifiedEmail: MutationResponse!
   }
 
   input ProfileInput {

@@ -189,6 +189,20 @@ export default {
       }
     ),
 
+    resendVerifiedEmail: combineResolvers(
+      isAuthenticated,
+      async (parent, {}, { models, me }) => {
+        const verificationCode = `${Math.floor(100000 + Math.random() * 900000)}`;
+      const user = await models.User.findByIdAndUpdate(
+          me.id,
+          { verificationCode },
+          { new: true }
+        );
+      Email.sendVerifyEmail(user.email, verificationCode);
+      return { isSuccess: !!user };
+      }
+    ),
+
     forgotPassword: async (parent, { email }, { models }) => {
       const user = await models.User.findOneAndUpdate(
         { email },
