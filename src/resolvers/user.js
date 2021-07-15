@@ -103,6 +103,9 @@ export default {
         }
         throw new AuthenticationError("Invalid password.");
       }
+      const { firstDate, totalIncome, totalSpending, moneyLeft } =
+        await getLogInfo(models, user.id);
+      _.assign(user, { firstDate, totalIncome, totalSpending, moneyLeft });
 
       return {
         token: createToken(user, secret, "1h"),
