@@ -1,12 +1,11 @@
-import jwt from "jsonwebtoken";
-import { combineResolvers } from "graphql-resolvers";
 import { AuthenticationError, UserInputError } from "apollo-server";
-import moment from "moment";
-import generator from "generate-password";
-
-import { isAdmin, isAuthenticated } from "./authorization";
-import Email from "../utils/email";
+import { combineResolvers } from "graphql-resolvers";
+import jwt from "jsonwebtoken";
 import _ from "lodash";
+import moment from "moment";
+import Email from "../utils/email";
+import { isAdmin, isAuthenticated } from "./authorization";
+
 
 const createToken = async (user, secret, expiresIn) => {
   const { id, email, username, role } = user;
@@ -255,12 +254,12 @@ export default {
     },
   },
 
-  User: {
-    // messages: async (user, args, { models }) => {
-    //   const messages = await models.Message.find({
-    //     userId: user.id,
-    //   });
-    //   return messages;
-    // },
-  },
+  // User: {
+  //   // messages: async (user, args, { models }) => {
+  //   //   const messages = await models.Message.find({
+  //   //     userId: user.id,
+  //   //   });
+  //   //   return messages;
+  //   // },
+  // },
 };

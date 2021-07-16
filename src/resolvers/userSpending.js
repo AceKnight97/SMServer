@@ -3,10 +3,6 @@ import { isAuthenticated } from "./authorization";
 import moment from "moment";
 import _ from "lodash";
 
-// const fromCursorHash = (string) =>
-//   Buffer.from(string, "base64").toString("ascii");
-// const toCursorHash = (string) => Buffer.from(string).toString("base64");
-
 const timeIso = (x) => moment(x, "DD/MM/YYYY").toISOString();
 const timeUtc = (x) => moment(x, "DD/MM/YYYY").utc();
 

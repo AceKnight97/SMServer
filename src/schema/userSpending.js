@@ -16,7 +16,7 @@ export default gql`
   type Log {
     title: String!
     money: Float!
-    details: String!
+    details: String
   }
 
   type SpendingResponse {
@@ -36,7 +36,7 @@ export default gql`
   input LogInput {
     title: String!
     money: Float!
-    details: String!
+    details: String
   }
 
   input UpdateDailyInput {
